@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "work"]
+  pull_request:
+    branches: ["main", "work"]
+
+jobs:
+  build-test-lint:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: Build
+        run: make build
+      - name: Test
+        run: make test
+      - name: Lint
+        run: make lint
