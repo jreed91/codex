@@ -9,10 +9,15 @@ let package = Package(
     products: [
         .executable(name: "CodexSwiftUIApp", targets: ["CodexSwiftUIApp"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.15.0")
+    ],
     targets: [
         .executableTarget(
             name: "CodexSwiftUIApp",
+            dependencies: [
+                .product(name: "SQLite", package: "SQLite.swift")
+            ],
             path: "Sources",
             resources: [],
             swiftSettings: []
