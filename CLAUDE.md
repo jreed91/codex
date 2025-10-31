@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**CodexSwiftUIApp** is a minimal SwiftUI application for iOS 16 created for demonstration purposes. This serves as a template/example project showcasing a basic SwiftUI app structure with proper build tooling, testing, and CI/CD setup.
+**CodexSwiftUIApp** is a minimal SwiftUI application for iOS 26 created for demonstration purposes. This serves as a template/example project showcasing a basic SwiftUI app structure with proper build tooling, testing, and CI/CD setup.
 
 ## Project Structure
 
@@ -27,7 +27,7 @@ codex/
 
 - **Language**: Swift 5.9+
 - **Framework**: SwiftUI
-- **Platform**: iOS 16+
+- **Platform**: iOS 26+
 - **Build System**: Swift Package Manager (SPM)
 - **Testing**: XCTest
 - **Linting**: SwiftLint
@@ -63,7 +63,7 @@ cd CodexSwiftUIApp && xcodebuild -list
 ## Package Configuration
 
 **Package.swift** defines:
-- Minimum iOS version: iOS 16
+- Minimum iOS version: iOS 26
 - Swift tools version: 5.9
 - Single executable target: CodexSwiftUIApp
 - Test target: CodexSwiftUIAppTests
@@ -104,7 +104,7 @@ Test suite for the application (check this file for current test cases).
 
 ## Development Guidelines
 
-1. **iOS Target**: All code must support iOS 16+
+1. **iOS Target**: All code must support iOS 26+
 2. **Testing**: Tests run on iPhone 16 simulator by default
 3. **Code Quality**: SwiftLint is used and enforced in CI
 4. **Branch Strategy**: Main development on `main` and `work` branches
