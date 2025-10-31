@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "CodexSwiftUIApp",
     platforms: [
-        .iOS(.v16)
+        .iOS("26.0")
     ],
     products: [
         .executable(name: "CodexSwiftUIApp", targets: ["CodexSwiftUIApp"])
