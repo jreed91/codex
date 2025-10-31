@@ -1,79 +1,67 @@
 import Foundation
+import FoundationModels
+
+@Generable
+struct ParsedFoodItems: Codable {
+    let items: [ParsedFoodItem]
+}
+
+@Generable
+struct ParsedFoodItem: Codable {
+    let foodName: String
+    let calories: Double
+    let protein: Double
+    let carbs: Double
+    let fat: Double
+}
 
 class FoodParserService {
-    // This service will use Apple Intelligence to parse food text
-    // For iOS 26, we'll use the Intelligence framework
+    private let model = SystemLanguageModel.default
 
     func parseFood(from text: String) async throws -> [FoodEntry] {
-        // Use Apple Intelligence to parse the food text
-        // This is a placeholder for the actual Apple Intelligence integration
-        // which will be available through the Intelligence framework in iOS 26
-
-        // For now, we'll implement a basic parser that demonstrates the structure
-        // In production, this would call Apple's Intelligence APIs
-
-        let prompt = """
-        Parse the following food log entry and extract food items with their nutritional information.
-        Return JSON array with: foodName, calories (number), protein (g), carbs (g), fat (g), mealType (breakfast/lunch/dinner/snack).
-
-        User input: \(text)
-
-        Provide your best estimate for nutritional values based on common portion sizes.
-        """
-
-        // TODO: Replace with actual Apple Intelligence API call
-        // For now, return a mock response to demonstrate structure
-        let parsedEntries = try await mockParsing(text: text)
-
-        return parsedEntries
-    }
-
-    // Mock implementation - replace with actual Apple Intelligence integration
-    private func mockParsing(text: String) async throws -> [FoodEntry] {
-        // Simulate API delay
-        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-
-        let lowercased = text.lowercased()
+        // Check if model is available
+        guard case .available = model.availability else {
+            throw FoodParserError.modelUnavailable
+        }
 
         // Determine meal type from text or time
         let mealType = determineMealType(from: text)
 
-        var entries: [FoodEntry] = []
+        // Create session
+        let session = LanguageModelSession()
 
-        // Simple keyword-based parsing (replace with Apple Intelligence)
-        let foodKeywords: [(String, Double, Double, Double, Double)] = [
-            ("egg", 70, 6, 1, 5),
-            ("eggs", 140, 12, 2, 10),
-            ("toast", 80, 3, 15, 1),
-            ("chicken", 165, 31, 0, 4),
-            ("rice", 130, 2.7, 28, 0.3),
-            ("apple", 95, 0.5, 25, 0.3),
-            ("banana", 105, 1.3, 27, 0.4),
-            ("salad", 50, 2, 8, 1),
-            ("pasta", 200, 7, 40, 1.5),
-            ("pizza", 285, 12, 36, 10),
-            ("burger", 354, 20, 33, 17),
-            ("sandwich", 250, 15, 30, 8),
-            ("yogurt", 100, 5, 12, 2.5),
-            ("oatmeal", 150, 5, 27, 3),
-            ("protein shake", 200, 25, 10, 3),
-            ("milk", 150, 8, 12, 8),
-            ("coffee", 5, 0.3, 0, 0),
-        ]
+        // Create prompt for structured food parsing
+        let prompt = """
+        You are a nutritionist assistant. Parse the following food log entry and extract all food items with their nutritional information.
 
-        for (food, cal, prot, carb, ft) in foodKeywords {
-            if lowercased.contains(food) {
-                entries.append(FoodEntry(
-                    id: 0,
-                    date: Date(),
-                    mealType: mealType,
-                    foodName: food.capitalized,
-                    calories: cal,
-                    protein: prot,
-                    carbs: carb,
-                    fat: ft
-                ))
-            }
+        User input: "\(text)"
+
+        For each food item mentioned, provide:
+        - foodName: The name of the food item
+        - calories: Estimated calories (as a number)
+        - protein: Estimated protein in grams (as a number)
+        - carbs: Estimated carbohydrates in grams (as a number)
+        - fat: Estimated fat in grams (as a number)
+
+        Base estimates on standard portion sizes. If quantities are mentioned (e.g., "2 eggs"), calculate totals accordingly.
+        Return all identified food items in an array.
+        """
+
+        // Use guided generation to get structured output
+        let response = try await session.respond(to: prompt, generating: ParsedFoodItems.self)
+
+        // Convert parsed items to FoodEntry objects
+        let entries = response.content.items.map { item in
+            FoodEntry(
+                id: 0,
+                date: Date(),
+                mealType: mealType,
+                foodName: item.foodName,
+                calories: item.calories,
+                protein: item.protein,
+                carbs: item.carbs,
+                fat: item.fat
+            )
         }
 
         return entries
@@ -105,4 +93,9 @@ class FoodParserService {
             return .dinner
         }
     }
+}
+
+enum FoodParserError: Error {
+    case modelUnavailable
+    case parsingFailed
 }

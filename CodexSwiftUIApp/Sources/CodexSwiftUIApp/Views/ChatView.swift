@@ -129,8 +129,10 @@ class ChatViewModel: ObservableObject {
                     let itemsList = entries.map { "\($0.foodName): \(String(format: "%.0f", $0.calories)) kcal" }.joined(separator: "\n")
                     addSystemMessage("Logged:\n\(itemsList)")
                 }
+            } catch FoodParserError.modelUnavailable {
+                addSystemMessage("Apple Intelligence is not available on this device. Please check your settings or device compatibility.")
             } catch {
-                addSystemMessage("Sorry, I had trouble processing that. Error: \(error.localizedDescription)")
+                addSystemMessage("Sorry, I had trouble processing that. Please try again.")
             }
         }
     }

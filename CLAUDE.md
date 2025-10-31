@@ -42,7 +42,7 @@ codex/
 - **Platform**: iOS 26+
 - **Build System**: Swift Package Manager (SPM)
 - **Database**: SQLite (via SQLite.swift 0.15.0+)
-- **AI/ML**: Apple Intelligence framework (iOS 26)
+- **AI/ML**: Foundation Models framework (iOS 26) with on-device Apple Intelligence
 - **Charts**: SwiftUI Charts
 - **Testing**: XCTest
 - **Linting**: SwiftLint
@@ -52,8 +52,9 @@ codex/
 
 ### 1. Chat-Based Food Logging
 - Natural language interface for logging meals
-- Powered by Apple Intelligence for food parsing
-- Automatic calorie and macro estimation
+- Powered by Foundation Models framework using on-device Apple Intelligence
+- AI-driven food parsing with structured output via @Generable macro
+- Automatic calorie and macro estimation using SystemLanguageModel
 - Context-aware meal type detection (breakfast/lunch/dinner/snack)
 
 ### 2. Daily Nutrition Tracking
@@ -130,7 +131,7 @@ The project uses GitHub Actions for continuous integration:
 The app is a fully functional calorie tracking application with:
 - Three-tab interface (Chat, Today, History)
 - SQLite database for persistent storage
-- Apple Intelligence integration for food parsing (mock implementation with TODO for production)
+- Apple Intelligence integration using Foundation Models framework for AI-powered food parsing
 - Real-time calorie and macro calculations
 - Interactive charts for historical data
 - Swipe-to-delete functionality for food entries
@@ -150,7 +151,7 @@ Data model representing a single food entry with nutritional information (calori
 Singleton class managing SQLite operations including table creation, CRUD operations for food entries, and date-range queries. Uses SQLite.swift for database interaction.
 
 ### Services/FoodParserService.swift
-Service layer for parsing natural language food descriptions using Apple Intelligence. Currently contains a mock implementation with TODO markers for production Apple Intelligence API integration.
+Service layer for parsing natural language food descriptions using Apple Intelligence Foundation Models framework. Uses @Generable macro for structured output and LanguageModelSession for on-device AI inference. Automatically extracts food items with nutritional information from natural language input.
 
 ### Views/MainTabView.swift
 Tab bar container with three tabs: Chat, Today, and History. Uses SF Symbols for tab icons.
@@ -184,7 +185,8 @@ Test suite for the application (check this file for current test cases).
 - External dependency: **SQLite.swift** for database operations
 - Build system uses **xcodebuild** via Makefile abstractions
 - Database file is stored in app's documents directory as `food_tracker.sqlite3`
-- Apple Intelligence integration uses mock parsing (production API integration is TODO)
+- Apple Intelligence integration uses **Foundation Models** framework with on-device inference
+- Uses **@Generable** macro for type-safe structured output from AI models
 
 ## Architecture Patterns
 
@@ -202,7 +204,7 @@ When working on this project:
 1. **Adding new views**: Create Swift files in `Sources/CodexSwiftUIApp/Views/`
 2. **Adding models**: Create Swift files in `Sources/CodexSwiftUIApp/Models/`
 3. **Database changes**: Modify `DatabaseManager.swift` and update schema
-4. **AI parsing improvements**: Update `FoodParserService.swift` with better food detection or Apple Intelligence integration
+4. **AI parsing improvements**: Update `FoodParserService.swift` prompts or @Generable structures for better food extraction
 5. **Adding tests**: Add to `Tests/CodexSwiftUIAppTests.swift` or create new test files
 6. **Modifying build**: Update `Package.swift` and/or `Makefile`
 7. **Changing CI**: Edit `.github/workflows/ci.yml`
@@ -210,7 +212,8 @@ When working on this project:
 ## Notes
 
 - All data is stored locally; no backend or cloud sync
-- Apple Intelligence integration is mocked with TODO markers for production implementation
+- Apple Intelligence runs entirely on-device using the Foundation Models framework
+- Requires iOS 26+ for Apple Intelligence features
 - Deployment functionality is a placeholder and not yet implemented
 - All development and testing is simulator-based (no physical device required)
 - Charts require iOS 16+ (SwiftUI Charts framework)
